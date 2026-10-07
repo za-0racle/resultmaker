@@ -1,0 +1,149 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+button {
+  color: inherit;
+}
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+h1 {
+  font-size: 29px;
+  letter-spacing: -1px;
+  font-weight: 650;
+  line-height: 1.3;
+  margin-bottom: 7px;
+}
+h2 {
+  font-size: 16px;
+  letter-spacing: -0.25px;
+  font-weight: 650;
+  margin-bottom: 0;
+}
+h3 {
+  font-size: 16px;
+}
+p {
+  line-height: 1.65;
+}
+small {
+  font-size: 11px;
+}
+.icon {
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #5f7ea9;
+  outline-offset: 3px;
+}
+::selection {
+  background: #ccd7e7;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.skip-link {
+  position: fixed;
+  left: 270px;
+  top: -100px;
+  z-index: 100;
+  background: var(--primary);
+  color: white;
+  padding: 12px;
+}
+.skip-link:focus {
+  top: 10px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  font-weight: 700;
+  color: var(--primary);
+}
+.padded {
+  padding: 20px 24px;
+}
+.helper-text {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.text-link .icon {
+  width: 15px;
+  height: 15px;
+}
+.mint {
+  background: #e7ecf4;
+  color: #2a528a;
+}
+.blue {
+  background: #eaf1fb;
+  color: #5d83b0;
+}
+.purple {
+  background: #f0f2f6;
+  color: #7b91b0;
+}
+.amber {
+  background: #fff3df;
+  color: #bf954e;
+}
+.teal {
+  background: #dce4ee;
+  color: #264877;
+}
+.gold {
+  background: #e6b85f;
+}
+.slate {
+  background: #d6dbe3;
+}

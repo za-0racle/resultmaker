@@ -1,0 +1,2 @@
+export const Pagination = (page, total, pageSize = 8) =>
+  `<div class="pagination"><span>Showing ${total ? (page - 1) * pageSize + 1 : 0}–${Math.min(page * pageSize, total)} of ${total} records</span><div><button class="button secondary small" data-page="${page - 1}" ${page <= 1 ? "disabled" : ""}>Previous</button><span>Page ${page} of ${Math.max(1, Math.ceil(total / pageSize))}</span><button class="button secondary small" data-page="${page + 1}" ${page * pageSize >= total ? "disabled" : ""}>Next</button></div></div>`;
