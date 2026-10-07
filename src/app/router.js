@@ -22,6 +22,9 @@ const route = (path, scope, render, kind = "") => ({
   kind,
 });
 export const routes = [
+  route("/workspaces", "public", () => "", "workspaces"),
+  route("/student/dashboard", "student", () => ""),
+  route("/parent/dashboard", "parent", () => ""),
   ...[
     ["/", "home"],
     ["/about", "about"],
@@ -146,8 +149,11 @@ export function matchRoute(pathname) {
 let onNavigate;
 export function navigate(path) {
   history.pushState({}, "", path);
-  onNavigate?.();
-  window.scrollTo({ top: 0, behavior: "instant" });
+  Promise.resolve(onNavigate?.()).then(() => {
+    const target = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    if (target) target.scrollIntoView({ behavior: "instant" });
+    else window.scrollTo({ top: 0, behavior: "instant" });
+  });
 }
 export function startRouter(render) {
   onNavigate = render;

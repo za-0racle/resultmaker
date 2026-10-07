@@ -1,0 +1,190 @@
+{
+  "source": "User-supplied expanded hosted export, 2026-10-07",
+  "counts": {
+    "tables": 43,
+    "columns": 348,
+    "indexes": 141,
+    "policies": 100,
+    "triggers": 86,
+    "functions": 46,
+    "constraints": 318,
+    "table_grants": 684,
+    "column_grants": 3509,
+    "auth_profile_triggers": 1
+  },
+  "definitionAndGrantDifferences": [],
+  "notNullRepresentationDifferences": 288,
+  "functionAclDifferences": [
+    {
+      "function": "public.assign_school_teacher",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.assign_teacher_entity",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.calculate_academic_result",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.create_school_catalog_item",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.current_user_is_platform_admin",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.get_published_report",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.get_school_entitlements",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.link_teacher_account",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.list_school_teacher_accounts",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.platform_create_school",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.platform_remove_school",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.platform_set_school_status",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.register_my_school",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.remove_teacher_assignment",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.revoke_result_verification",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.transition_result_batch",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.transition_student_result",
+      "expected": [
+        "authenticated=X"
+      ],
+      "actual": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    }
+  ],
+  "tablesWithoutRls": []
+}

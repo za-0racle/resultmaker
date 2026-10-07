@@ -686,6 +686,7 @@ textarea {
   width: 100%;
 }
 .form-grid {
+  min-width: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -1253,3 +1254,5 @@ textarea {
   margin-top: 25px;
   margin-bottom: 0;
 }
+
+.route-progress { position: fixed; top: 12px; right: 20px; z-index: 1000; padding: .6rem 1rem; border-radius: 8px; background: var(--navy, #10244d); color: white; box-shadow: 0 2px 12px #0002; font-size: .8rem; }

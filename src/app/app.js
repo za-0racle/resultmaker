@@ -1,5 +1,21 @@
+import { liveResultKind } from "../utils/liveResultRoutes.js";
+import {
+  LiveAcademic,
+  bindLiveAcademic,
+  academicKind,
+} from "../pages/school/LiveAcademic.js";
 import { productName } from "../components/Brand.js";
-import { context, setRole } from "./context.js";
+import { Navbar, bindPublicNavigation } from "../components/Navbar.js";
+import { bindAccountModals } from "../components/AccountModals.js";
+import { identity, refreshIdentity, clearIdentity } from "./auth.js";
+import { roleWorkspaces, canAccessScope } from "./access.js";
+import { authService } from "../services/authService.js";
+import {
+  Authentication,
+  WorkspacePicker,
+  LiveWorkspace,
+  bindAuthentication,
+} from "../pages/public/Authentication.js";
 import { startRouter, matchRoute, navigate } from "./router.js";
 import { SchoolLayout } from "../layouts/SchoolLayout.js";
 import { PlatformLayout } from "../layouts/PlatformLayout.js";
@@ -23,12 +39,6 @@ import {
   assignmentForm,
   structureForm,
 } from "./forms.js";
-const roleHome = {
-  superAdmin: "/platform",
-  schoolAdmin: "/school/dashboard",
-  subjectTeacher: "/teacher/dashboard",
-  classTeacher: "/class-teacher/dashboard",
-};
 let renderVersion = 0;
 export async function renderApp({ focus } = {}) {
   const version = ++renderVersion,
@@ -48,13 +58,96 @@ export async function renderApp({ focus } = {}) {
       );
       return;
     }
-    const expectedRole = {
-      platform: "superAdmin",
-      school: "schoolAdmin",
-      teacher: "subjectTeacher",
-      "class-teacher": "classTeacher",
-    }[route.scope];
-    if (expectedRole && context.role !== expectedRole) setRole(expectedRole);
+    if (
+      route.kind === "login" ||
+      route.kind === "workspaces" ||
+      route.scope !== "public"
+    ) {
+      if (!identity.user || !app.querySelector(".live-workspace"))
+        app.innerHTML = LoadingState();
+      else {
+        app.setAttribute("aria-busy", "true");
+        app.querySelector(".route-progress")?.remove();
+        app.insertAdjacentHTML(
+          "beforeend",
+          '<div class="route-progress" role="status">Loading page...</div>',
+        );
+      }
+      await refreshIdentity();
+      if (version !== renderVersion) return;
+      if (route.scope !== "public" && !identity.user && !identity.error) {
+        history.replaceState({}, "", "/login");
+        return renderApp();
+      }
+      if (
+        route.scope !== "public" &&
+        identity.active &&
+        !canAccessScope(identity.active, route.scope)
+      ) {
+        history.replaceState({}, "", roleWorkspaces[identity.active.role].home);
+        return renderApp();
+      }
+      const academicPage =
+        identity.active?.role === "schoolAdmin" &&
+        academicKind(location.pathname)
+          ? await LiveAcademic(identity.active, location.pathname)
+          : null;
+      const resultsModule =
+        identity.active &&
+        liveResultKind(location.pathname, identity.active.role)
+          ? await import("../pages/results/LiveResults.js")
+          : null;
+      const resultPage = resultsModule
+        ? await resultsModule.LiveResults(identity.active, location.pathname)
+        : null;
+      const workspaceContent =
+        identity.requiresPasswordChange || identity.error || !identity.user
+          ? Authentication()
+          : route.scope !== "public" && identity.active
+            ? resultPage
+              ? resultPage.html
+              : academicPage
+                ? `<section class="live-workspace"><div class="page-heading"><h1>${{ sessions: "Academic sessions", terms: "Terms", classes: "Classes", subjects: "Subjects", students: "Students", profile: "Student profile" }[academicKind(location.pathname)]}</h1></div>${academicPage.html}</section>`
+                : await LiveWorkspace(location.pathname)
+            : WorkspacePicker();
+      if (version !== renderVersion) return;
+      const live = {
+        workspace: identity.active,
+        user: identity.user,
+        workspaces: identity.workspaces,
+      };
+      app.innerHTML =
+        route.scope !== "public" && identity.active && !identity.error
+          ? route.scope === "platform"
+            ? PlatformLayout(workspaceContent, location.pathname, live)
+            : SchoolLayout(
+                workspaceContent,
+                location.pathname,
+                route.scope,
+                live,
+              )
+          : PublicLayout(workspaceContent);
+      document.title = `Your workspace · ${productName}`;
+      bindAuthentication(navigate, renderApp);
+      if (resultPage)
+        resultsModule.bindLiveResults(identity.active, resultPage, renderApp);
+      if (academicPage)
+        bindLiveAcademic(identity.active, academicPage.data, renderApp);
+      document
+        .querySelector('[data-action="menu"]')
+        ?.addEventListener("click", (event) => {
+          const sidebar = document.querySelector(".sidebar");
+          sidebar.classList.toggle("open");
+          event.currentTarget.setAttribute(
+            "aria-expanded",
+            String(sidebar.classList.contains("open")),
+          );
+        });
+      document
+        .querySelector(".live-sidebar-close")
+        ?.addEventListener("click", closeLiveNavigation);
+      return;
+    }
     const content = await route.render(route.params);
     if (version !== renderVersion) return;
     app.innerHTML =
@@ -87,11 +180,7 @@ export async function renderApp({ focus } = {}) {
     if (route.kind === "settings") bindSettings(rerender);
     if (route.kind === "comments") bindComments();
     if (route.scope === "platform") bindPlatform(route.params.id, rerender);
-    if (route.scope === "public") bindPublic(route.kind, navigate, setRole);
-    document.querySelector("#role-switch")?.addEventListener("change", (e) => {
-      setRole(e.target.value);
-      navigate(roleHome[e.target.value]);
-    });
+    if (route.scope === "public") bindPublic(route.kind);
     document
       .querySelectorAll("[data-assign]")
       .forEach(
@@ -135,9 +224,46 @@ export async function renderApp({ focus } = {}) {
         Button("Go to home", { href: "/" }),
       ),
     );
+  } finally {
+    if (version === renderVersion) {
+      app.removeAttribute("aria-busy");
+      app.querySelector(".route-progress")?.remove();
+    }
   }
 }
 export function startApp() {
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeLiveNavigation();
+  });
+  bindPublicNavigation();
+  bindAccountModals(navigate);
   document.querySelector("#app").innerHTML = LoadingState();
+  try {
+    authService.onAuthStateChange((event) => {
+      if (event === "SIGNED_OUT") {
+        clearIdentity();
+        setTimeout(() => renderApp(), 0);
+      }
+      if (event === "TOKEN_REFRESHED" || event === "USER_UPDATED")
+        setTimeout(() => renderApp(), 0);
+    });
+  } catch {
+    /* The login page explains unavailable configuration. */
+  }
   startRouter(renderApp);
+  refreshIdentity().then(() => {
+    if (matchRoute(location.pathname)?.scope === "public") {
+      const navbar = document.querySelector(".public-nav");
+      if (navbar) navbar.outerHTML = Navbar();
+    }
+  });
+}
+
+function closeLiveNavigation() {
+  const sidebar = document.querySelector(".live-sidebar.open");
+  if (!sidebar) return;
+  sidebar.classList.remove("open");
+  const toggle = document.querySelector('[data-action="menu"]');
+  toggle?.setAttribute("aria-expanded", "false");
+  toggle?.focus();
 }

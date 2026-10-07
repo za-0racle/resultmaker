@@ -1,0 +1,4 @@
+[functions.teacher-accounts]
+# The handler validates the user's access token with Auth getUser before any action.
+# This supports projects using newer signing keys as well as legacy JWTs.
+verify_jwt = false

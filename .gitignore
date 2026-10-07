@@ -12,6 +12,11 @@ dist
 dist-ssr
 .browser-check/
 *.local
+.env
+.env.*
+!.env.example
+supabase/.temp/
+supabase/.branches/
 
 # Editor directories and files
 .vscode/*

@@ -1,3 +1,4 @@
+import { product } from "../../data/product.js";
 import { escapeHtml as e, initials } from "../../utils/helpers.js";
 import { Icon } from "../Icon.js";
 import { Table } from "../Table.js";
@@ -63,5 +64,5 @@ export function SignatureSection(report) {
   return `<section class="report-section"><h3>Administrative approval</h3><p>Date: ${e(report.date ?? "—")} · ${e(report.publicationStatus)}</p><div class="report-signatures"><span>Class teacher’s signature</span><span>Principal / head teacher’s signature & stamp</span></div></section>`;
 }
 export function ReportFooter(report) {
-  return `<footer class="report-document-footer"><strong>${e(report.reportId)}</strong><p>ÈsìAyọ̀ the result maker</p><p class="report-note">Sample layout and academic scores. Ratings, attendance, ranking and signatures are placeholders. Verification ID and QR verification will be implemented after publication and backend design.</p></footer>`;
+  return `<footer class="report-document-footer"><strong>${e(report.reportId)}</strong><p>${e(product.name)} &middot; ${e(product.subtitle)}</p><p>${e(product.copyright)}</p><p class="report-note">Sample layout and academic scores. Ratings, attendance, ranking and signatures are placeholders. Verification ID and QR verification will be implemented after publication and backend design.</p></footer>`;
 }

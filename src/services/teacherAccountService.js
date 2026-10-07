@@ -1,0 +1,3 @@
+import { getSupabaseClient } from '../lib/supabase/client.js';
+async function invoke(body){const {data,error}=await getSupabaseClient().functions.invoke('teacher-accounts',{body});if(error){let message='Teacher account service is unavailable. Ask the platform owner to deploy teacher-accounts.';try{const response=await error.context.json();message=response.error||message;}catch{}throw Error(message);}if(data?.error)throw Error(data.error);return data;}
+export const teacherAccountService={create:values=>invoke({action:'create',...values}),changePassword:values=>invoke({action:'change-password',...values})};

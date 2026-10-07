@@ -6,5 +6,6 @@ export function toast(message, type = "success") {
   element.setAttribute("role", type === "error" ? "alert" : "status");
   element.innerHTML = escapeHtml(message);
   region.append(element);
+  region.scrollTop = region.scrollHeight;
   setTimeout(() => element.remove(), 4200);
 }

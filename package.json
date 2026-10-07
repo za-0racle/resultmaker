@@ -7,9 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node tests/prototype.test.js"
+    "test": "node tests/prototype.test.js && node tests/access.test.js && node tests/supabase.test.js && node tests/workspaces.test.js && node tests/database-expansion.test.js && node tests/live-academic.test.js && node tests/live-results.test.js && node tests/teacher-onboarding.test.js && node tests/plan-catalog.test.js",
+    "supabase:check": "node scripts/check-supabase.mjs",
+    "db:check": "node tests/supabase.test.js && node tests/workspaces.test.js && node tests/database-expansion.test.js"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "vite": "^8.3.0"
   },
   "dependencies": {

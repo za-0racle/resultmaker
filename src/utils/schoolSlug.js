@@ -1,0 +1,1 @@
+export function schoolSlug(name){const base=name.normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48).replace(/-$/,'')||'school';return `${base}-${crypto.randomUUID().slice(0,8)}`;}

@@ -154,7 +154,7 @@ test("score limits reject missing, negative, fractional and oversized values", (
   assert.equal(validScore(70, 70), true);
 });
 test("required routes match with detail parameters and static import precedence", () => {
-  assert.equal(routes.length, 50);
+  assert.equal(routes.length, 53);
   for (const item of routes)
     assert.ok(matchRoute(item.path.replace(":id", "example-uuid")), item.path);
   assert.equal(matchRoute("/school/students/import").kind, "import");

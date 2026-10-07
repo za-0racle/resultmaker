@@ -583,7 +583,7 @@
   margin: 22px 0;
 }
 .public-hero h1 em {
-  font-family: Georgia, serif;
+  font-family: var(--font-heading);
   font-weight: 400;
   color: var(--primary);
 }
@@ -632,7 +632,7 @@
 }
 .public-form-layout {
   display: grid;
-  grid-template-columns: 1fr 440px;
+  grid-template-columns: minmax(0, 1fr) 440px;
   gap: 60px;
   padding-top: 30px;
   align-items: center;

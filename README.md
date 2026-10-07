@@ -19,7 +19,13 @@ npm run preview
 npm test
 ```
 
-`npm run build` writes `dist/`. `npm test` uses Node's built-in test runner, without additional dependencies.
+`npm run build` writes `dist/`. `npm test` uses Node's built-in test runner and embedded PostgreSQL (PGlite) to verify the Supabase migration and access rules.
+
+## Supabase foundation
+
+The SDK, browser-safe environment configuration, Auth/membership services, and tenant foundation migration are prepared. Follow [SUPABASE_SETUP.md](SUPABASE_SETUP.md) to connect a project and apply the migration. Run `npm run supabase:check` after setting `.env.local`.
+
+Login now uses Supabase email/password authentication and trusted memberships to choose a role-specific workspace. Protected routes show account/workspace information while academic record services are being implemented; they do not expose the sample records. Apply the additional Auth workspace migration described in SUPABASE_SETUP.md before platform-admin login.
 
 ## Project structure
 

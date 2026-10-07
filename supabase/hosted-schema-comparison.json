@@ -1,0 +1,112 @@
+{
+  "source": "User-supplied hosted schema export, 2026-10-07; metadata only, not a live connection",
+  "counts": {
+    "tables": 8,
+    "columns": 38,
+    "indexes": 17,
+    "policies": 9,
+    "triggers": 2,
+    "functions": 15,
+    "constraints": 36,
+    "table_grants": 118,
+    "column_grants": 348,
+    "auth_profile_triggers": 1
+  },
+  "definitionDifferences": [],
+  "notNullCatalogRepresentationDifferences": 30,
+  "nullability": "All 38 column definitions including nullability match",
+  "functionAclDifferences": [
+    {
+      "function": "public.assign_school_teacher",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.create_school_catalog_item",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.current_user_is_platform_admin",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.list_school_teacher_accounts",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.platform_create_school",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.platform_remove_school",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.platform_set_school_status",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.register_my_school",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    },
+    {
+      "function": "public.remove_teacher_assignment",
+      "expected": [
+        "authenticated=X"
+      ],
+      "observed": [
+        "authenticated=X",
+        "service_role=X"
+      ]
+    }
+  ],
+  "anonymousOrPublicFunctionGrants": [],
+  "decision": "Foundation definitions match; trusted service_role has additional public RPC execute grants. Expansion still requires migration-plan review/staging; no hosted SQL applied."
+}

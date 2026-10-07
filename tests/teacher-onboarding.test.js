@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import { foundation,expansion,migration,login,scalar } from './helpers/database.js';
+import { Registration } from '../src/pages/public/Registration.js';
+import { schoolSlug } from '../src/utils/schoolSlug.js';
+const db=await foundation();
+try{
+ for(const file of expansion)await migration(db,file);
+ await migration(db,'20261007250000_teacher_account_onboarding.sql');
+ const admin='00000000-0000-4000-8000-000000000001',teacher='00000000-0000-4000-8000-000000000002';
+ await db.query("insert into auth.users(id,email,email_confirmed_at) values($1,'admin@test.example',now()),($2,'teacher@test.example',now())",[admin,teacher]);
+ const school=await scalar(db,"insert into public.schools(name,slug) values('School','test-school') returning id");
+ await db.query("insert into public.school_memberships(school_id,user_id,role) values($1,$2,'school_admin')",[school,admin]);
+ const classId=await scalar(db,"insert into public.school_classes(school_id,name) values($1,'Class') returning id",[school]);
+ await login(db,admin);
+ assert.equal(await scalar(db,'select public.current_user_can_manage_school($1)',[school]),true);
+ await assert.rejects(()=>db.query("select public.provision_teacher_account($1,$2,'Teacher','class_teacher',$3,null)",[school,teacher,classId]));
+ await login(db,'','service_role');
+ await db.query("select public.provision_teacher_account($1,$2,'Teacher','class_teacher',$3,null)",[school,teacher,classId]);
+ await login(db,teacher);
+ assert.equal(await scalar(db,'select public.current_user_requires_password_change()'),true);
+ assert.equal(await scalar(db,"select private.has_school_role($1,array['class_teacher'])",[school]),false);
+ assert.equal(await scalar(db,'select count(*)::integer from public.school_classes'),0);
+ await assert.rejects(()=>db.query('select public.complete_teacher_password_change($1)',[teacher]));
+ await login(db,'','service_role');await db.query('select public.complete_teacher_password_change($1)',[teacher]);
+ await login(db,teacher);
+ assert.equal(await scalar(db,'select public.current_user_requires_password_change()'),false);
+ assert.equal(await scalar(db,'select count(*)::integer from public.school_classes'),1);
+ await assert.rejects(()=>db.query('select * from private.teacher_credentials'));
+ assert.ok(!Registration().includes('signup-kind'));assert.ok(!Registration().includes('signup-slug'));
+ const first=schoolSlug('Royal Academy');assert.ok(/^royal-academy-[a-z0-9]{8}$/.test(first));assert.notEqual(first,schoolSlug('Royal Academy'));
+ console.log('PASS teacher onboarding: school-only signup, unique hidden slug, trusted provisioning, mandatory password gate and service-only completion');
+}finally{await db.close();}
